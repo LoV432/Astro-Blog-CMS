@@ -29,17 +29,25 @@ module.exports = (plugin) => {
     return updateComment
   }
 
-  plugin.controllers.admin.updateAvatar = async function(ctx) {
+  plugin.controllers.admin.updateAuthor = async function(ctx) {
     const { params = {}, request } = ctx;
     const { body } = request;
     const { id } = parseParams(params);
-    
+    const currentComment = await strapi.db
+    .query(getModelUid("comment")).findOne({
+      where: { id }
+    })
+    const name = body.authorName != undefined ? body.authorName : currentComment.authorName 
+    const avatar = body.authorAvatar != undefined ? body.authorAvatar : currentComment.authorAvatar
+    const email = body.authorEmail != undefined ? body.authorEmail : currentComment.authorEmail
     const updateComment = await strapi.db
       .query(getModelUid("comment"))
       .update({
         where: { id },
         data: {
-          authorAvatar: body.avatar
+          authorAvatar: avatar,
+          authorName: name,
+          authorEmail: email,
         }
       });
     return updateComment
@@ -55,8 +63,8 @@ module.exports = (plugin) => {
   });
   plugin.routes['admin'].routes.push({
     method: "PUT",
-    path: "/moderate/single/:id/updateAvatar",
-    handler: "admin.updateAvatar",
+    path: "/moderate/single/:id/updateAuthor",
+    handler: "admin.updateAuthor",
     config: {
       policies: [],
     }
