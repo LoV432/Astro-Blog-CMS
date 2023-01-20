@@ -12,6 +12,16 @@ const getModelUid = (name) => {
     return strapi.plugin("comments").contentTypes[name]?.uid;
 };
 
+const getAuthorName = (author) =>{
+  
+  const {lastname, username, firstname} = author;
+
+  if(lastname)
+    return `${firstname} ${lastname}`
+  else
+    return username || firstname 
+};
+
 module.exports = (plugin) => {
   plugin.controllers.admin.updateAdminStatus = async function(ctx) {
     const { params = {}, request } = ctx;
@@ -27,6 +37,36 @@ module.exports = (plugin) => {
         }
       });
     return updateComment
+  }
+
+  plugin.controllers.admin.postComment = async function(ctx){
+      const { params = {}, request } = ctx;
+      const { body } = request;
+      const { id:threadId } = parseParams(params);
+
+      const entity = await strapi.db
+        .query(getModelUid("comment"))
+        .findOne({
+          where: {
+            id: threadId,
+          },
+        });
+  
+      return await strapi.db
+        .query(getModelUid("comment"))
+        .create({
+          data: {
+            approvalStatus: "APPROVED",
+            authorId: body.author.id,
+            authorName: getAuthorName(body.author),
+            authorEmail: body.author.email,
+            authorAvatar: 'https://avatars.dicebear.com/api/identicon/' + Math.random() * 99999999 + '.svg?background=%23ffffff',
+            content: body.content,
+            threadOf: threadId,
+            related: entity.related,
+            isAdminComment: true,
+          },
+        });
   }
 
   plugin.controllers.admin.updateAuthor = async function(ctx) {
