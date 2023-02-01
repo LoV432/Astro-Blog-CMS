@@ -7,4 +7,9 @@ module.exports = ({ env }) => ({
         excludedTypes: [],
       },
     },
+    'local-image-sharp': {
+      config: {
+        cacheDir: '.image-cache',
+      }
+    }
   });
