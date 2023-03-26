@@ -3,7 +3,7 @@ module.exports = ({ env }) => ({
       enabled: true,
       config: {
         autoGenerate: true,
-        allowedFields: ['slug'],
+        allowedFields: ['slug', 'tag'],
         excludedTypes: [],
       },
     },
