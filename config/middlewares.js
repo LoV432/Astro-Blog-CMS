@@ -6,7 +6,7 @@ module.exports = [
       contentSecurityPolicy: {
         directives: {
           'script-src': ["'self'"],
-          'img-src': ["'self'", 'data:', 'avatars.dicebear.com'],
+          'img-src': ["'self'", 'data:', 'avatars.dicebear.com','res.cloudinary.com'],
         },
       }
     },
