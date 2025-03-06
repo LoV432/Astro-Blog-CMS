@@ -60,7 +60,7 @@ module.exports = (plugin) => {
             authorId: body.author.id,
             authorName: getAuthorName(body.author),
             authorEmail: body.author.email,
-            authorAvatar: 'https://avatars.dicebear.com/api/identicon/' + Math.random() * 99999999 + '.svg?background=%23ffffff',
+            authorAvatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=' + Math.random() * 99999999 + '&background=%23ffffff',
             content: body.content,
             threadOf: threadId,
             related: entity.related,
